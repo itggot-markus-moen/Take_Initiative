@@ -23,44 +23,44 @@ def initiative()
             response = STDIN.gets.chomp
             if response == "y"
                 encounter = encounter_maker()
-            else
-                return "Then what the fuck do you want?"
             end
         end
-        arr = monster_list(encounter)
-        initiative = monster_initiative(arr)
-        puts "Roll initiative!"
-        i = 0
-        pcs.each do |pc|
-            puts pc
-            roll = STDIN.gets.chomp.to_i
-            initiative[pc] = roll
-        end
-        initiative = initiative.sort_by(&:last).reverse.to_h
-        puts "Enter 'done' when done, 'help' for more commands."
-        i = 0
-        while combat != "done"
-            while combat != ""
-                if combat == "help"
-                    puts "'list' for initiative order.\n"
-                end
-                if combat == "list"
-                    j = 0
-                    list = ""
-                    while j < initiative.length
-                        list += "#{initiative.values[j]}: #{initiative.keys[j]}\n"
-                        j += 1
+        if response == "y"
+            arr = monster_list(encounter)
+            initiative = monster_initiative(arr)
+            puts "Roll initiative!"
+            i = 0
+            pcs.each do |pc|
+                puts pc
+                roll = STDIN.gets.chomp.to_i
+                initiative[pc] = roll
+            end
+            initiative = initiative.sort_by(&:last).reverse.to_h
+            puts "Enter 'done' when done, 'help' for more commands."
+            i = 0
+            combat = ""
+            while combat != "done"
+                while combat != ""
+                    if combat == "help"
+                        puts "'list' for initiative order.\n"
                     end
-                    puts list
-                end
+                    if combat == "list"
+                        j = 0
+                        list = ""
+                        while j < initiative.length
+                            list += "#{initiative.values[j]}: #{initiative.keys[j]}\n"
+                            j += 1
+                        end
+                        puts list
+                    end
+                    combat = STDIN.gets.chomp
+                    end
+                puts "#{initiative.values[i]}: #{initiative.keys[i]}\n\n"
+                i += 1
+                i = i % initiative.length
                 combat = STDIN.gets.chomp
-                end
-            puts initiative.keys[i]
-            i += 1
-            i = i % initiative.length
-            combat = STDIN.gets.chomp
+            end
         end
-        combat = ""
         puts "Enter 'done' if the session is over."
         session = STDIN.gets.chomp
     end
